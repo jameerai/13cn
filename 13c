@@ -1,0 +1,157 @@
+AIM
+The aim of this experiment is to study Wireshark – a network protocol analyzer used for packet capture, analysis, and network troubleshooting. The study includes installation, packet capture, packet analysis, filtering, and use of statistics tools.
+
+Problem Statement
+Install Wireshark on a Windows or Linux system.
+Capture live network traffic using Wireshark (GUI and command line).
+Apply capture and display filters to isolate specific traffic.
+Analyze captured packets and identify protocols, source/destination addresses, and payload content.
+Use Wireshark's statistics and analysis tools to understand network traffic patterns.
+Save and open capture files for offline analysis.
+Input
+Live network interface with internet connectivity
+(Optional) Pre‑saved capture file (.pcap or .pcapng)
+Output
+Captured packets displayed in the Wireshark GUI
+Filtered traffic based on user‑defined criteria
+Statistics reports (Protocol Hierarchy, Endpoints, Conversations)
+Saved capture file for offline analysis
+Example Output (Packet List):
+
+No. Time Source Destination Protocol Length Info 1 0.000000 192.168.1.10 192.168.1.1 TCP 66 50152 → 443 [SYN] Seq=0 2 0.012345 192.168.1.1 192.168.1.10 TCP 66 443 → 50152 [SYN, ACK] Seq=0 Ack=1 3 0.012456 192.168.1.10 192.168.1.1 TCP 54 50152 → 443 [ACK] Seq=1 Ack=1 4 0.023456 192.168.1.10 192.168.1.1 HTTP 456 GET /index.html HTTP/1.1
+Algorithm / Procedure
+Part A: Installation of Wireshark
+Step‑1: Open a web browser and navigate to the official Wireshark website: https://www.wireshark.org/
+Step‑2: Click on the Download button and select the Windows installer (64‑bit or 32‑bit as per system).
+Step‑3: Save the installer file and run it.
+Step‑4: Follow the installation wizard:
+
+Accept the license agreement.
+Select the installation directory (default is fine).
+Select components: Wireshark, TShark, plugins, and tools.
+Important: Install Npcap or WinPcap when prompted (required for packet capture).
+Complete the installation. Step‑5: Launch Wireshark from the Start Menu or desktop shortcut.
+For Linux (Ubuntu/Debian):
+
+bash
+v1.0
+sudo apt update
+sudo apt install wireshark
+During installation, you may be prompted to allow non‑root users to capture packets. Select "Yes" if you want to allow this.
+
+Part B: Packet Capture Using Wireshark (GUI)
+Step‑1: Launch Wireshark.
+Step‑2: In the main window, a list of available network interfaces is displayed. The interface with traffic activity will show a graph of packets.
+Step‑3: Click on the interface name (e.g., Ethernet, Wi-Fi) or select Capture → Interfaces to see all interfaces.
+Step‑4: Click the Start button (blue shark fin) to begin capturing packets.
+Step‑5: The capture dialog will show the number of packets increasing as traffic flows.
+Step‑6: Once sufficient packets have been captured (or after reproducing the problem to be analyzed), click the Stop button (red square).
+Step‑7: The captured packets will appear in the Packet List pane.
+Step‑8: To save the capture, go to File → Save As and choose a location and filename (default format .pcapng).
+
+Part C: Starting Wireshark from Command Line
+Step‑1: Open Command Prompt (Windows) or Terminal (Linux).
+Step‑2: View help and command-line options:
+
+bash
+v1.0
+wireshark -h
+Step‑3: Capture packets from a specific interface with a capture filter:
+
+bash
+v1.0
+wireshark -i <interface> -f "host 192.168.1.10" -w capture.pcap
+Step‑4: Open a saved capture file:
+
+bash
+v1.0
+wireshark -r capture.pcap
+Step‑5: Apply a display filter when opening:
+
+bash
+v1.0
+wireshark -r capture.pcap -Y "http"
+Part D: Viewing Captured Traffic
+Step‑1: In the Packet List pane, click on any packet to select it.
+Step‑2: The Packet Details pane will expand, showing the protocol layers of the selected packet (e.g., Frame, Ethernet, IP, TCP, HTTP).
+Step‑3: Click on the + signs to expand each layer and view detailed fields (source/destination addresses, ports, flags, etc.).
+Step‑4: The Packet Bytes pane displays the raw hexadecimal and ASCII representation of the packet.
+Step‑5: Use the scroll wheel or scrollbar to navigate through the packet list.
+
+Part E: Applying Filters
+Step‑1: In the Display Filter bar (above the Packet List pane), type a filter expression.
+
+Example: To show only HTTP traffic:
+
+http
+Example: To show traffic from a specific IP:
+
+ip.src == 192.168.1.10
+Step‑2: Press Enter or click the Apply arrow. The Packet List will update to show only matching packets.
+Step‑3: To clear the filter, click the X button next to the filter bar.
+
+Capture Filters:
+
+Go to Capture → Options.
+In the Capture Filter field, enter a BPF filter (e.g., host 192.168.1.10).
+Click Start to begin capture with the filter applied.
+Part F: Analysis and Statistics
+Step‑1: Go to the Statistics menu to access various analysis tools.
+
+Tool	Description
+Protocol Hierarchy	Displays a breakdown of protocols in the capture (percentage of packets/bytes per protocol).
+Endpoints	Shows all endpoints (MAC, IP, ports) and their traffic statistics.
+Conversations	Shows traffic between pairs of endpoints.
+IO Graphs	Plots traffic over time (packets/sec, bytes/sec).
+Flow Graph	Visualizes the sequence of packets between hosts.
+TCP Stream Graph	Analyzes TCP streams (timing, throughput, etc.).
+Packet Lengths	Displays the distribution of packet lengths.
+Step‑2: Click on Statistics → Protocol Hierarchy to view the breakdown.
+Step‑3: Click on Statistics → Endpoints to see all communicating endpoints.
+Step‑4: Click on Statistics → Conversations to see traffic between host pairs.
+
+Part G: Following TCP Streams
+Step‑1: Right‑click on a TCP packet in the Packet List pane.
+Step‑2: Select Follow → TCP Stream.
+Step‑3: A new window opens showing the entire TCP conversation in both directions.
+Step‑4: You can view the data in ASCII, HEX, or other formats.
+Step‑5: This is useful for reconstructing HTTP requests, FTP transfers, and other application‑layer traffic.
+
+Part H: Using Colouring Rules
+Step‑1: Go to View → Coloring Rules.
+Step‑2: Wireshark has default color rules for common protocols (e.g., TCP is blue, UDP is light blue, HTTP is green).
+Step‑3: To add a custom coloring rule:
+
+Click New.
+Enter a name and a display filter expression.
+Choose a foreground and background color.
+Click OK.
+Examples
+Example 1: Capturing HTTP Traffic Only
+Capture Filter:
+
+port 80
+Display Filter:
+
+http
+Example 2: Capturing Traffic to/from a Specific IP
+Capture Filter:
+
+host 192.168.1.10
+Display Filter:
+
+ip.addr == 192.168.1.10
+Example 3: Following a TCP Stream (HTTP GET Request)
+Capture traffic while browsing a website.
+In the Packet List, find an HTTP GET packet.
+Right‑click → Follow → TCP Stream.
+The stream shows the full HTTP request and response.
+Example 4: Command-Line Capture
+bash
+v1.0
+wireshark -i eth0 -f "tcp port 80" -w http_traffic.pcap
+Constraints
+Wireshark requires administrative/root privileges to capture packets.
+In switched networks, only the capturing computer's own traffic is visible unless port mirroring is enabled.
+Capturing all traffic on a busy network can generate very large files – use capture filters to reduce data.
+Analyzing encrypted traffic (HTTPS, SSH, etc.) requires decryption keys (which are not available in typical scenarios).
